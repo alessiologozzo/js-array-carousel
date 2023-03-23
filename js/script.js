@@ -1,103 +1,162 @@
-let image = ["img/01.webp", "img/02.webp", "img/03.webp", "img/04.webp", "img/05.webp"];
-let element = document.getElementsByClassName("element");
-let main = document.getElementById("main-content");
-let up = document.querySelector(".up");
-let down = document.querySelector(".down");
+// -----> Main
+let mainImage;
+let mainTitle;
 let index = 3;
-let animation = document.getElementsByClassName("animation-container");
-let firstContainer = true;
+let firstAnimation = true;
+let interval;
+
+let image = new Array();
+setupImages();
+
+let element = new Array();
+setupElements();
+
+setupMain();
+
+startCarousel();
+// -----> /Main
 
 
-main.style.backgroundImage = `url(${image[3]})`
-element[3].classList.add("active");
-element[0].addEventListener("click", () => {animateDisappear(); main.style.backgroundImage = `url(${image[0]})`; element[index].classList.remove("active"); index = 0; element[index].classList.add("active");});
-element[1].addEventListener("click", () => {animateDisappear(); main.style.backgroundImage = `url(${image[1]})`; element[index].classList.remove("active"); index = 1; element[index].classList.add("active");});
-element[2].addEventListener("click", () => {animateDisappear(); main.style.backgroundImage = `url(${image[2]})`; element[index].classList.remove("active"); index = 2; element[index].classList.add("active");});
-element[3].addEventListener("click", () => {animateDisappear(); main.style.backgroundImage = `url(${image[3]})`; element[index].classList.remove("active"); index = 3; element[index].classList.add("active");});
-element[4].addEventListener("click", () => {animateDisappear(); main.style.backgroundImage = `url(${image[4]})`; element[index].classList.remove("active"); index = 4; element[index].classList.add("active");});
-down.addEventListener("click", goUp);
-up.addEventListener("click", goDown);
+function setupElements(){
+    let sideContent = document.getElementById("side-content");
+    
+    for(let i = 0; i < image.length; i++){
 
-for(let i = 0; i < image.length; i++){
-    document.querySelector(`.element:nth-child(${i+1})`).style.backgroundImage = `url(${image[i]})`;
+        element.push(document.createElement("div"));
+        element[i].classList.add("element");
+        element[i].addEventListener("click", () => {interactSide(i)})
+        
+        let img = document.createElement("img");
+        img.src = image[i].path;
+
+        element[i].appendChild(img);
+        sideContent.appendChild(element[i]);
+    }
+
+    element[index].classList.add("active");
 }
 
-function goUp(){
-    if(index == element.length - 1){
-        
-        animateUp();
-        element[index].classList.remove("active");
-        index = 0;
-        main.style.backgroundImage = `url(${image[index]})`;
-        element[index].classList.add("active");
+function interactSide(i){
+    animateDisappear();
+    element[index].classList.remove("active");
+    index = i;
+    element[index].classList.add("active");
+    mainImage.src = image[index].path;
+    mainTitle.textContent = image[index].title;
+}
+
+function setupImages(){
+    image.push({title: "Spider-Man", path: "img/01.webp"});
+    image.push({title: "Ratchet & Clank", path: "img/02.webp"});
+    image.push({title: "Guys in tights", path: "img/03.webp"});
+    image.push({title: "Cat", path: "img/04.webp"});
+    image.push({title: "Heroes", path: "img/05.webp"});
+}
+
+function setupMain(){
+    let main = document.getElementById("main-content");
+
+    for(let i = 0; i < 2; i++){
+        let animationContainer = document.createElement("div");
+        animationContainer.classList.add("animation-container");
+        let animationImage = document.createElement("img");
+        animationContainer.appendChild(animationImage);
+        main.appendChild(animationContainer);
+    }
+
+    for(let i = 0; i < 2; i++){
+        let circle = document.createElement("i");
+        if(i % 2 == 0){
+            circle.classList.add("fa-solid", "fa-chevron-circle-up", "up");
+            circle.addEventListener("click", goUp);
+        }
+        else{
+            circle.classList.add("fa-solid", "fa-chevron-circle-down", "down");
+            circle.addEventListener("click", goDown);
+        }
+        main.appendChild(circle);
+    }
+
+    mainImage = document.createElement("img");
+    mainImage.src = image[index].path;
+    main.appendChild(mainImage);
+
+    let titleContainer = document.createElement("div");
+    titleContainer.classList.add("title-container");
+    mainTitle = document.createElement("h1");
+    mainTitle.textContent = image[index].title;
+    titleContainer.appendChild(mainTitle);
+    main.appendChild(titleContainer);
+}
+
+function animateDisappear(){
+
+    firstImage = document.querySelector("#main-content > div:nth-child(1) img");
+    secondImage = document.querySelector("#main-content > div:nth-child(2) img");
+
+    if(firstAnimation == true){
+        firstImage.src = image[index].path;
+        firstImage.classList.add("animation-disappear");
+        secondImage.classList.remove("animation-disappear");
+        firstAnimation = false
     }
     else{
-        animateUp();
-        element[index].classList.remove("active");
-        index++;
-        main.style.backgroundImage = `url(${image[index]})`;
-        element[index].classList.add("active");
+        secondImage.src = image[index].path;
+        secondImage.classList.add("animation-disappear");
+        firstImage.classList.remove("animation-disappear");
+        firstAnimation = true;
     }
 }
 
 function goDown(){
+
+    if(index == element.length - 1){
+        animateDisappear();
+        element[index].classList.remove("active");
+        index = 0;
+        mainImage.src = image[index].path;
+        mainTitle.textContent = image[index].title;
+        element[index].classList.add("active");
+    }
+    else{
+        animateDisappear();
+        element[index].classList.remove("active");
+        index++;
+        mainImage.src = image[index].path;
+        mainTitle.textContent = image[index].title;
+        element[index].classList.add("active");
+    }
+}
+
+function goUp(){
     if(index == 0){
-        animateDown();
+        animateDisappear();
         element[index].classList.remove("active");
         index = element.length - 1;
-        main.style.backgroundImage = `url(${image[index]})`;
+        mainImage.src = image[index].path;
+        mainTitle.textContent = image[index].title;
         element[index].classList.add("active");
     }
     else{
-        animateDown();
+        animateDisappear();
         element[index].classList.remove("active");
         index--;
-        main.style.backgroundImage = `url(${image[index]})`;
+        mainImage.src = image[index].path;
+        mainTitle.textContent = image[index].title;
         element[index].classList.add("active");
     }
 }
 
-function animateUp(){
-    if(firstContainer == true){
-        animation[0].style.backgroundImage = `url(${image[index]})`;
-        animation[0].classList.add("animation-up");
-        animation[1].classList.remove("animation-up", "animation-down");
-        firstContainer = false;
-    }
-    else{
-        animation[1].style.backgroundImage = `url(${image[index]})`;
-        animation[1].classList.add("animation-up");
-        animation[0].classList.remove("animation-up", "animation-down");
-        firstContainer = true;
-    }
+function startCarousel(){
+    resumeCarousel();
+    document.getElementsByClassName("row")[0].addEventListener("mouseover", pauseCarousel);
+    document.getElementsByClassName("row")[0].addEventListener("mouseleave", resumeCarousel);
 }
 
-function animateDown(){
-    if(firstContainer == true){
-        animation[0].style.backgroundImage = `url(${image[index]})`;
-        animation[0].classList.add("animation-down");
-        animation[1].classList.remove("animation-down", "animation-up", "animation-disappear");
-        firstContainer = false;
-    }
-    else{
-        animation[1].style.backgroundImage = `url(${image[index]})`;
-        animation[1].classList.add("animation-down");
-        animation[0].classList.remove("animation-down", "animation-up", "animation-disappear");
-        firstContainer = true;
-    }
+function pauseCarousel(){
+    clearInterval(interval);
 }
 
-function animateDisappear(){
-    if(firstContainer == true){
-        animation[0].style.backgroundImage = `url(${image[index]})`;
-        animation[0].classList.add("animation-disappear");
-        animation[1].classList.remove("animation-disappear", "animation-down", "animation-up");
-        firstContainer = false;
-    }
-    else{
-        animation[1].style.backgroundImage = `url(${image[index]})`;
-        animation[1].classList.add("animation-disappear");
-        animation[0].classList.remove("animation-disappear", "animation-down", "animation-up");
-        firstContainer = true;
-    }
+function resumeCarousel(){
+    interval = setInterval(goDown, 5000);
 }

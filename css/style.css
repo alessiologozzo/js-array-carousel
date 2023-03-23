@@ -11,6 +11,7 @@
 
 body{
     background-color: #303942;
+    font-family: 'Alkatra', cursive;
 }
 
 .container{
@@ -47,10 +48,9 @@ body{
     bottom: 0;
     left: 0;
     right: 0;
-    /* background-image: url("../img/01.webp"); */
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+}
+
+.animation-container img{
     opacity: 0;
 }
 
@@ -61,44 +61,6 @@ body{
     color: white;
     font-size: var(--icon_size);
     opacity: 0.7;
-}
-
-.animation-up{
-    animation: move-up 1000ms linear;
-}
-
-.animation-down{
-    animation: move-down 1000ms linear;
-}
-
-@keyframes move-down{
-    from{
-        top: 0;
-        opacity: 1;
-    }
-    80%{
-        top: calc(var(--height) * 80 / 100);
-        opacity: 1;
-    }
-    to{
-        top: var(--height);
-        opacity: 0;
-    }
-}
-
-@keyframes move-up{
-    from{
-        bottom: 0;
-        opacity: 1;
-    }
-    80%{
-        bottom: calc(var(--height) * 80 / 100);
-        opacity: 1;
-    }
-    to{
-        bottom: var(--height);
-        opacity: 0;
-    }
 }
 
 .animation-disappear{
@@ -167,10 +129,31 @@ body{
     border: 3px solid white;
 }
 
+img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.title-container{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 0.7rem;
+    border-radius: 0 7px 0 0;
+    padding: 0.3rem 0.5rem 0;
+}
+
 @media screen and (min-width: 576px){
     
     .row{
         width: 576px;
+    }
+
+    .title-container{
+        font-size: 0.8rem;
     }
 }
 
@@ -178,6 +161,10 @@ body{
     
     .row{
         width: 650px;
+    }
+
+    .title-container{
+        font-size: 0.9rem;
     }
 }
 
@@ -190,6 +177,10 @@ body{
 
     .row{
         width: 720px;
+    }
+
+    .title-container{
+        font-size: 1rem;
     }
 }
 
